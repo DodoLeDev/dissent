@@ -1,0 +1,66 @@
+{
+  "id": "so.libdb.dissent.Devel",
+  "runtime": "org.gnome.Platform",
+  "runtime-version": "47",
+  "sdk": "org.gnome.Sdk",
+  "command": "dissent",
+  "sdk-extensions": [
+    "org.freedesktop.Sdk.Extension.golang"
+  ],
+  "finish-args": [
+    "--socket=wayland",
+    "--socket=fallback-x11",
+    "--socket=pulseaudio",
+    "--share=ipc",
+    "--share=network",
+    "--talk-name=org.freedesktop.Notifications",
+    "--talk-name=org.freedesktop.secrets",
+    "--talk-name=org.kde.kwalletd5",
+    "--talk-name=org.kde.StatusNotifierWatcher",
+    "--filesystem=xdg-run/keyring",
+    "--device=dri"
+  ],
+  "modules": [
+    {
+      "name": "libspelling",
+      "buildsystem": "meson",
+      "config-opts": [
+        "-Ddocs=false"
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://gitlab.gnome.org/GNOME/libspelling.git",
+          "tag": "0.4.6"
+        }
+      ]
+    },
+    {
+      "name": "dissent",
+      "buildsystem": "simple",
+      "build-options": {
+        "append-path": "/usr/lib/sdk/golang/bin",
+        "env": {
+          "GOBIN": "/app/bin",
+          "GOROOT": "/usr/lib/sdk/golang"
+        }
+      },
+      "build-commands": [
+      	"sed -i 's/\"so.libdb.dissent\"/\"so.libdb.dissent.Devel\"/' main.go",
+        "/usr/lib/sdk/golang/bin/go install -v -mod=mod ./...",
+        "cp nix/so.libdb.dissent{,.Devel}.desktop",
+        "cp so.libdb.dissent{,.Devel}.metainfo.xml",
+        "desktop-file-edit --set-icon=$FLATPAK_ID --remove-key=DBusActivatable nix/$FLATPAK_ID.desktop",
+        "install -Dm644 nix/$FLATPAK_ID.desktop /app/share/applications/$FLATPAK_ID.desktop",
+        "install -Dm644 internal/icons/hicolor/scalable/apps/$FLATPAK_ID.svg /app/share/icons/hicolor/scalable/apps/$FLATPAK_ID.svg",
+        "install -Dm644 $FLATPAK_ID.metainfo.xml /app/share/metainfo/$FLATPAK_ID.metainfo.xml"
+      ],
+      "sources": [
+        {
+          "type": "dir",
+          "path": "."
+        }
+      ]
+    }
+  ]
+}
