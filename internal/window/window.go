@@ -17,6 +17,7 @@ import (
 	"libdb.so/dissent/internal/gtkcord"
 	"libdb.so/dissent/internal/window/login"
 	"libdb.so/dissent/internal/window/quickswitcher"
+	"libdb.so/dissent/internal/gresources"
 )
 
 var useDiscordColorScheme = prefs.NewBool(true, prefs.PropMeta{
@@ -52,7 +53,7 @@ type Window struct {
 	Chat    *ChatPage
 }
 
-// NewWindow creates a new Window.
+// NewWindow creates a new Window. TODO: Move to Cambalache
 func NewWindow(ctx context.Context) *Window {
 	appInstance := app.FromContext(ctx)
 
@@ -80,9 +81,11 @@ func NewWindow(ctx context.Context) *Window {
 	w.Stack.AddChild(w.Login)
 	w.Stack.AddChild(w.Loading)
 	w.Stack.SetVisibleChild(w.Login)
-	win.SetContent(w.Stack)
+	win.SetContent(gresources.WindowUI().(gtk.Widgetter))
+	//win.SetContent(w.Stack)
 
-	w.SwitchToLoginPage()
+
+	//w.SwitchToLoginPage()
 	return &w
 }
 

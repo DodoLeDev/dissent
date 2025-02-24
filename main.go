@@ -18,6 +18,7 @@ import (
 	"libdb.so/dissent/internal/gtkcord"
 	"libdb.so/dissent/internal/window"
 	"libdb.so/dissent/internal/window/about"
+	"libdb.so/dissent/internal/gresources"
 
 	_ "github.com/diamondburned/gotkit/gtkutil/aggressivegc"
 	_ "libdb.so/dissent/internal/icons"
@@ -62,6 +63,10 @@ func init() {
 }
 
 func main() {
+	if !gresources.Load() {
+		return
+	}
+
 	m := manager{}
 	m.app = app.New(context.Background(), "so.libdb.dissent", "Dissent")
 	m.app.AddJSONActions(map[string]interface{}{

@@ -50,6 +50,8 @@
         "/usr/lib/sdk/golang/bin/go install -v -mod=mod ./...",
         "cp nix/so.libdb.dissent{,.Devel}.desktop",
         "cp so.libdb.dissent{,.Devel}.metainfo.xml",
+        "mkdir -p /app/share/glib-2.0/dissent/",
+        "glib-compile-resources --target=/app/share/glib-2.0/dissent/resources.gresource so.libdb.dissent.gresource.xml",
         "desktop-file-edit --set-icon=$FLATPAK_ID --remove-key=DBusActivatable nix/$FLATPAK_ID.desktop",
         "install -Dm644 nix/$FLATPAK_ID.desktop /app/share/applications/$FLATPAK_ID.desktop",
         "install -Dm644 internal/icons/hicolor/scalable/apps/$FLATPAK_ID.svg /app/share/icons/hicolor/scalable/apps/$FLATPAK_ID.svg",
